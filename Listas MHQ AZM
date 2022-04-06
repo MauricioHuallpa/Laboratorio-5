@@ -1,0 +1,128 @@
+/*LAB#5 Huallpa Quino Mauricio R.
+        Zambrana Morales Ana Paola
+        a)Implementacion de Listas enlazadas */
+        
+    //Las listas constan de un numero 'n' de nodos//
+    //Pueden ser//
+    //Listas simplemente enlazadas ........................[a1]->[a2]->[a3]->[a4]//
+    //Listas Doblemente enlazadas .........................[a1]<->[a2]<->[a3]<->[a4]//
+    //Lista Circular simplemente enlazada..................[a1]->[a2]->[a3]->[a4]->[a1]...//
+    //Lista Circular Doblemente enlazada...................[a1]<->[a2]<->[a3]<->[a4]<->[a1]...//
+
+#include<iostream>
+#include<stdlib.h>
+#include<conio.h>
+using namespace std;
+
+struct Nodo{   // estructura de una lista//
+	int dato;
+	Nodo *siguiente;	
+};
+
+void insertarLista(Nodo *&,int);
+void mostrarLista(Nodo *);
+void calcularMayorMenor(Nodo *);
+void calcularSumaPromedio(Nodo *);
+
+int main(){
+	system("color 3F");
+	Nodo *lista = NULL;
+	int dato;
+	char opcion;
+	cout<<"\n\t _________________________________________________________________";
+	cout<<"\n\t |                                                               |";
+	cout<<"\n\t |  LAB#5   HUALLPA QUINO MAURICIO RODRIGO             ETN-307L  |";
+	cout<<"\n\t |          ZAMBRANA MORALES ANA PAOLA                           |";
+	cout<<"\n\t |_______________________________________________________________|";
+	cout<<"\n\n\t Implementacion de Listas en C++ ";
+	
+	do{
+		cout<<"\n\t Digite un numero para agregarlo a lista: ";
+		cin>>dato;
+		insertarLista(lista,dato);
+		
+		cout<<"\n\t Desea agregar un nuevo numero ? S = si | N = no : ";
+		cout<<"\n\t opcion : ";cin>>opcion;
+	}while(opcion == 's' || opcion == 'S');
+	
+	cout<<"\n\t ELEMENTOS DE LA LISTAS : \n\n";
+	mostrarLista(lista); //mostramos la lista
+	cout<<"\t -----------------------------------";
+	calcularMayorMenor(lista);	
+	calcularSumaPromedio(lista);
+	cout<<"\t -----------------------------------" ;
+	
+	getch();
+	system("cls");
+	return main();
+	
+}
+
+//Funcion para Insertar elemento en la lista
+
+void insertarLista(Nodo *&lista,int n){
+	Nodo *nuevo_nodo = new Nodo();
+	Nodo *aux;
+	
+	nuevo_nodo->dato = n;
+	nuevo_nodo->siguiente = NULL;
+	
+	if(lista == NULL){                      //Si la lista esta vacia
+		lista = nuevo_nodo;                 //agregamos el primer nodo
+	}
+	else{
+		aux = lista;
+		while(aux->siguiente != NULL){      //recorremos la lista hasta llegar al final
+			aux = aux->siguiente;
+		}
+		aux->siguiente = nuevo_nodo;        //agregamos el nuevo nodo al final de la lista
+	}
+	cout<<"\t  / Elemento ["<<n<<"] agregado a lista / \n";
+}
+
+//Funcion para Mostrar todos los elementos de la lista//
+
+void mostrarLista(Nodo *lista){	
+	Nodo *actual = new Nodo();        //Declaramos un nuevo Nodo//
+	
+	actual = lista;
+	while(actual != NULL){                          //mientras no sea final de la lista//
+		cout<<"\t\t | -> "<<actual->dato<<"  | \n"; //mostramos el dato//
+		actual = actual->siguiente;                 //avanzamos a la siguiente posicion de la lista//
+	}
+}
+
+//Funcion para Calcular el menor y mayor elemento de la lista//
+
+void calcularMayorMenor(Nodo *lista){
+	int mayor=0,menor=100000;
+	
+	while(lista != NULL){             //mientras no sea el final de la lista//
+		if((lista->dato)>mayor){      //Comprobamos el numero mayor//
+			mayor = lista->dato;
+		}
+		if((lista->dato)<menor){      //Comprobamos el numero menor//
+			menor = lista->dato;
+		}
+		lista = lista->siguiente;     //Avanzamos en la lista//
+	}
+	
+	cout<<"\n\t El mayor numero es: "<<mayor<<endl;
+	cout<<"\t El menor numero es: "<<menor<<endl;	
+}
+//Funcion para Calcular suma y promedio de los elementos de la lista//
+void calcularSumaPromedio(Nodo *lista){
+	float suma=0,promedio=0;
+	int contador=0;
+	
+	while(lista != NULL){              //mientras no sea el final de la lista//
+		suma += lista->dato;           //suma iterativa//
+		contador++;                    //aumentamos el contador de elementos de la lista//
+		lista = lista->siguiente;      //Avanzamos en la lista//
+	}
+	
+	promedio = suma / contador;        //Para Calcular el Promedio//
+	
+	cout<<"\n\t La suma es: "<<suma<<endl;
+	cout<<"\t El promedio es: "<<promedio<<endl;
+}
