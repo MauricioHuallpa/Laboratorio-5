@@ -1,0 +1,108 @@
+/*LAB#5 Huallpa Quino Mauricio R.
+        Zambrana Morales Ana Paola
+        a)Uso de Colas*/
+#include <iostream>
+#include <conio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+using namespace std;
+
+struct Nodo{        //para definir el nodo (estructura) //
+	string nombre;   //compuesta por nombres//
+	Nodo *siguiente;  //definimos el puntero que ira por orden de introduccion//
+};
+
+//Protocolo de funciones
+void menu();
+void insertarCola(Nodo *&,Nodo *&,string);   // *&=Puntero por referencia//
+bool cola_vacia(Nodo *);
+void suprimirCola(Nodo *&,Nodo *&,string &);
+
+int main(){
+	system("color 3F");
+	
+	menu();    //llamamos a la funcion Menu//
+	
+	getch();
+	return 0;
+}
+void menu(){
+	int opcion;
+	string nombre;      //declaramos los nombres que introduciremos//
+	
+	Nodo *frente=NULL;     //declaramos el frente de la fila (por donde salen los elementos)//
+	Nodo *fin=NULL;        //declaramos el fin de la fila (por donde se ingresan los elementos)
+	
+	do{
+		cout<<"\n\t _________________________________________________________________";
+		cout<<"\n\t |                                                               |";
+		cout<<"\n\t |  LAB#5   HUALLPA QUINO MAURICIO RODRIGO             ETN-307L  |";
+		cout<<"\n\t |          ZAMBRANA MORALES ANA PAOLA                           |";
+		cout<<"\n\t |_______________________________________________________________|";
+		cout<<"\n\n\t Uso de las Colas en C++ ";          //Las colas son sistemas FIFO (first in first out)
+		cout<<"\n\t 1.- Introducir Nombres y edades";     //en una cola el primero en llegar es el primero en ser atendido
+		cout<<"\n\t 2.- Mostrar los nombres introducidos"; //lista debe estar por orden de llegada
+		cout<<"\n\t 3.- Salir ";
+		cout<<"\n\t Opcion : ";cin>>opcion;
+		switch(opcion){
+			case 1:
+				cout<<"\n\t Ingresar el nombre para Agregarlo a la cola : ";cin>>nombre;//solicitamos nombres para llenar la cola
+				insertarCola(frente,fin,nombre);            //llamamos la funcion insertar cola y enviamos datos
+				break;                        
+			case 2:
+				cout<<"\n\t Mostrando los elementos de la cola : \n";
+				while(frente!=NULL){         //mientras exista almenos un elemento introducido
+					suprimirCola(frente,fin,nombre);   //llamamos a ;a funcion suprimir para borrar los elemento empezando del primero
+					if(frente!=NULL){
+						cout<<"\n\t | "<<nombre<<" | ";//para mostrar terminos que existen en la cola, empiea a eliminar desde el primero
+					}
+					else{
+						cout<<"\n\t | "<<nombre<<" | ";//ultima termino en la lista , es el ultimo en ser eliminado
+					}
+				}
+				system("pause");
+				break;
+			case 3:
+				break;
+			
+		}
+		system("cls");
+	}while(opcion != 3);
+}
+
+//funcion para insertar elementos a la cola//
+
+void insertarCola(Nodo *&frente,Nodo *&fin,string n){   // *&=Puntero por referencia//
+	Nodo *nuevo_nodo = new Nodo();     //creamos nuevo nodo
+	
+	nuevo_nodo->nombre=n;         //designamos valor del nuevo nodo
+	nuevo_nodo->siguiente=NULL;
+	
+	if(cola_vacia(frente)){    //verificamos si quedan elementos en la cola
+		frente=nuevo_nodo;	
+	}
+	else{
+		fin->siguiente=nuevo_nodo;  //asignamos como el fin al nuevo nodo
+	}
+	fin=nuevo_nodo;
+}
+bool cola_vacia(Nodo *frente){    //funcion bool para retornar un true o un false 
+	return (frente==NULL)? true : false;    //NULL significa que no existe elemento
+}
+
+//Funcion para eliminar elementos de la cola//
+
+void suprimirCola(Nodo *&frente,Nodo *&fin,string &n){
+	n = frente->nombre; //nombramos al primer elemento
+	Nodo *aux= frente;  //asignamos un puntero aux al primer elemento del nodo
+	
+	if(frente==fin){  //solo hay un nodo
+		frente=NULL;
+		fin=NULL;
+	}
+	else{             //hay mas de un nodo
+		frente=frente->siguiente;//vamos al siguiente en la cola
+	}
+	delete aux;//borramos el contenido del puntero aux
+}
