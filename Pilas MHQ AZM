@@ -1,0 +1,144 @@
+/*LAB#5 Huallpa Quino Mauricio R.
+        Zambrana Morales Ana Paola
+        a)Uso de Pilas*/
+
+#include <iostream>
+using namespace std;
+ 
+struct nodo{       //estructura de una pila
+    int nro;
+    struct nodo *sgte;
+};
+ 
+typedef nodo *ptrPila;   // creando nodo tipo puntero( tipo de dato ) //
+ 
+// Funcion para Apilar elemento  //  
+
+void push( ptrPila &p, int valor )
+{
+     ptrPila aux;
+     aux = new(struct nodo);  // apuntamos al nuevo nodo creado//
+     aux->nro = valor;
+     
+     aux->sgte = p ; // se introducen elementos a la pila//
+     p = aux ;
+}
+ 
+// Funcion para DesApilar elemento  // 
+
+int pop( ptrPila &p )
+{
+     int num ;
+     ptrPila aux;
+     
+     aux = p ;
+     num = aux->nro;   // asignamos el primer vamor de la pila//
+     
+     p = aux->sgte ;
+     delete(aux);      //se borra el ultimo elemento que ingreso//
+     
+     return num;
+}
+ 
+// Funcion para Mostrar elementos  // 
+
+void mostrar_pila( ptrPila p )
+{
+     ptrPila aux;
+     aux = p;     // apunta al inicio de la lista
+     
+     while( aux !=NULL )
+     {
+            cout<<"\t\t | "<< aux->nro <<" | "<<endl;//muestra la pila ingresada
+            aux = aux->sgte;
+     }    
+}
+ 
+// Funcion para eliminar la pila totalmente//
+
+void destruir_pila( ptrPila &p)
+{
+     ptrPila aux;
+     
+     while( p != NULL)//mientras sigan existiendo elementos//
+     {
+           aux = p;
+           p = aux->sgte;//el puntero ira avanzando en la pila
+           delete(aux); // se borra la pila
+     }
+}
+ 
+// Funcion Para el Menu interactivo   //
+
+void menu()
+{
+	cout<<"\n\t _________________________________________________________________";
+	cout<<"\n\t |                                                               |";
+	cout<<"\n\t |  LAB#5   HUALLPA QUINO MAURICIO RODRIGO             ETN-307L  |";
+	cout<<"\n\t |          ZAMBRANA MORALES ANA PAOLA                           |";
+	cout<<"\n\t |_______________________________________________________________|";
+	cout<<"\n\n\t Implementacion de Pilas en C++ ";          //Las pilas son sistemas LIFO (last in first out)
+	cout<<"\n\t 1.- Apilar elemento ";     //en una pila el primero en llegar es el ultimo en ser atendido
+	cout<<"\n\t 2.- Desapilar elemento ";  //al desapilar se debe empezar por el ultimo que se registro
+	cout<<"\n\t 3.- Mostrar Pila";         //la pila muestra el ultimo elemento registrado como el primero
+	cout<<"\n\t 4.- Destruir Pila";
+	cout<<"\n\t 5.- Salir ";
+	cout<<"\n\t Opcion :";
+}
+ 
+//Funcion Principal//
+
+int main()
+{
+    ptrPila p = NULL;  // creando pila
+    int dato;
+    int op;
+    int x ; // numero que devuelve la funcon pop
+   
+    system("color 3F");
+ 
+    do
+    {
+        menu();  cin>> op;
+ 
+        switch(op)
+        {
+            case 1:
+                 cout<< "\n\t NUMERO A APILAR: "; cin>> dato;
+                 push( p, dato );   //llamamos a la funcion push y enviamos datos//
+                 cout<<"\n\t\tNumero " << dato << " apilado...\n\n";
+            break;
+ 
+ 
+            case 2:
+                 x = pop( p );        //sacamos el ultimo elemento que ingreso//
+                 cout<<"\n\t\tNumero "<< x <<" desapilado...\n\n";
+            break;
+                 
+ 
+            case 3:
+ 
+                 cout << "\n\n\t MOSTRANDO PILA\n\n";
+                 if(p!=NULL)      //condicion para comprobar que existe elementos aun//
+                    mostrar_pila( p );
+                 else
+                    cout<<"\n\n\t\t Pila vacia..!"<<endl;
+            break;
+ 
+ 
+            case 4:
+ 
+                 destruir_pila( p );// se borran todos los datos ingresados
+                 cout<<"\n\n\t\tPila eliminada...\n\n";
+            break;
+           
+         }
+ 
+        cout<<endl<<endl;
+        system("pause");  system("cls");
+ 
+    }while(op!=5);
+   
+   
+    return 0;
+}
