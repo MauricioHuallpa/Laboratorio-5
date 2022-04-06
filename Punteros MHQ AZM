@@ -1,0 +1,296 @@
+/*LAB#5 Huallpa Quino Mauricio R.
+        Zambrana Morales Ana Paola
+        a)Calculadora Matrices con punteros*/
+
+#include <iostream>
+#include <conio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+//los punteros son variables que guardan la direccion de memoria de otra variable//
+
+using namespace std;
+//Prototipos de funciones//
+void pedirdatos();
+void imprimirmatriz(int **,int,int);
+void sumaMatrices(int **,int,int);
+void restaMatrices(int **,int,int);
+void multiplicacionMatrices(int **,int,int);
+void menu();
+void matrizTraspuesta(int **,int,int);
+void factorizacionLU(int **,int,int);
+void rangodelaMatriz(int **,int,int);
+void determinante(int **,int,int);
+
+int **A,m,n;// declaramos las variable puntero puntero que necesitamos//
+int **B;    // las variable ** con doble puntero se usa para referirse al matrices//
+int **C;    // las variable * con puntero pueden referirse a variables o arreglos//
+
+int main()
+{	
+system("color 3F");
+
+	int opcion;
+	cout<<"\n\t _________________________________________________________________";
+	cout<<"\n\t |                                                               |";
+    cout<<"\n\t |  LAB#5   HUALLPA QUINO MAURICIO RODRIGO             ETN-307L  |";
+	cout<<"\n\t |          ZAMBRANA MORALES ANA PAOLA                           |";
+	cout<<"\n\t |_______________________________________________________________|";
+	cout<<"\n\n\t CALCULADORA DE MATRICES";
+	 
+	pedirdatos();   //llamamos a la funcion para pedir datos//
+	system("cls");
+	imprimirmatriz(A,m,n); //imprimimos la matriz con la que trabajaremos//
+	do{
+        menu();
+        cout<<"\t Opcion :"; cin >> opcion; //opcion para elegir operacion//
+        system("cls");
+        if( cin.fail() || cin.bad() ){
+            opcion = 0;
+            cin.clear();
+            cin.ignore( '\n', 80 );
+        }
+        switch( opcion ){  //elegimos la operacion y llamamos las funciones que necesitaremos//
+            case 1:
+                sumaMatrices(A,m,n);   //en cada Funcion ademas de llmarla , le enviamos los datos de la matriz//
+                break;                  //La transferencia de datos entre funciones es posible gracias a los punteros//
+            case 2:
+                restaMatrices(A,m,n);
+                break;
+            case 3:
+                multiplicacionMatrices(A,m,n);
+                break;
+            case 4:
+            	matrizTraspuesta(A,m,n);
+                break;
+            case 5:
+            	rangodelaMatriz(A,m,n);
+                break;
+            case 6:
+            	determinante(A,m,n);
+            	break;
+            case 7:
+                cout << "\n\nFIN DEL PROGRAMA\n\n";
+                return 0;
+                break;
+            default:
+                cout << "\n\nOPCION NO VALIDA\n\n";
+                break;
+        }
+ 
+    }while( opcion != 7 );//si la opcion es diferente de 7 ,el programa seguira ejecutandose//
+
+}
+
+void pedirdatos(){
+	cout<<"\n\t Introducir dimenciones de la Matriz A";
+	cout<<"\n\t Introducir Filas 'm' : ";cin>>m;
+	cout<<"\t Introducir columnas 'n' : ";cin>>n;
+	A= new int*[m];
+	for(int i=0;i<m;i++){   //declaracion y armado de matrices usando puntero puntero
+		A[i]= new int[n]; 
+	}
+	cout<<"\n\t Rellenar elementos de la matriz A\n";
+	for(int i=0;i<m;i++){
+		for(int j=0;j<n;j++){
+			cout<<"\t Digite elemento ["<<i<<"]["<<j<<"] :";
+			cin>>*(*(A+i)+j);  //forma de llenar una matriz usando punteros 
+		}
+	}
+}
+void imprimirmatriz(int **A,int m,int n){  //en la funcion recibimos la matriz ** y la variables enteras que usaremos//
+	cout<<"\n\t La Matriz ingresada es :\n\n"; 
+	for(int i=0;i<m;i++){
+		cout<<"\t\t | ";
+		for(int j=0;j<n;j++){
+			cout<<"\t"<<*(*(A+i)+j); //forma de impresion de matriz usando punteros
+		}
+		cout<<"\t | \n";
+	}
+}
+void menu(){ //menu de operaciones que usaremos//
+	cout<<"\n\t Digite la operacion que desea hacer ";
+	cout<<"\n\t ----------------------------------------------------------------------";
+	cout<<"\n\t 1. Suma de Matrices (A + B)          2. Resta de Matrices (A - B)";
+	cout<<"\n\t 3. Multiplicacion de Matrices(A x B) 4. Traspuesta de la Matriz";
+	cout<<"\n\t 5. Rango de la matriz                6. Determinante";
+	cout<<"\n\t 7. Salir                     ";
+	cout<<"\n\t ----------------------------------------------------------------------\n";
+}
+void sumaMatrices(int **A,int m, int n){ //en la funcion recibimos la matriz ** y la variables enteras que usaremos//
+	
+	B= new int*[m];                    //en este caso que necesitamos mas de una matriz , declaramos las que necesitemos con punteros
+	for(int i=0;i<m;i++){
+		B[i]= new int[n];      // (new int) para reservar espacios de memoria justas para el arreglo o matriz//
+	}
+	C= new int*[m];
+	for(int i=0;i<m;i++){
+		C[i]= new int[n];
+	}
+	cout<<"\n\t Rellenar elementos de la matriz B \n";
+	for(int i=0;i<m;i++){
+		for(int j=0;j<n;j++){
+			cout<<"\t Digite elemento ["<<i<<"]["<<j<<"] :";
+			cin>>*(*(B+i)+j);     //operaciones para rellenar la matriz B//
+		}
+	}
+	for( int i = 0; i < m; i++ ){
+		for( int j = 0; j < n; j++ ){
+			C[i][j] = A[i][j] + B[i][j];  //operaciones de la suma//
+		}
+	}
+	cout << "\n\t Matriz A : ";       //Imprimimos resultados llamando a la funcion de Imprimir matriz y enviadole los datos//
+    imprimirmatriz( A, m, n );
+    cout << "\n\t Matriz B : ";
+    imprimirmatriz( B, m, n );
+    cout << "\n\t Suma de las matrices (A+B) : ";
+    imprimirmatriz( C, m, n );
+}
+void restaMatrices(int **A,int m, int n){ //en la funcion recibimos la matriz ** y la variables enteras que usaremos//
+	B= new int*[m];
+	for(int i=0;i<m;i++){                //en este caso que necesitamos mas de una matriz , declaramos las que necesitemos con punteros
+		B[i]= new int[n];
+	}
+	C= new int*[m];
+	for(int i=0;i<m;i++){
+		C[i]= new int[n];           // (new int) para reservar espacios de memoria justas para el arreglo o matriz//
+	}
+	cout<<"\n\t Rellenar elementos de la matriz B \n";
+	for(int i=0;i<m;i++){
+		for(int j=0;j<n;j++){
+			cout<<"\t Digite elemento ["<<i<<"]["<<j<<"] :";
+			cin>>*(*(B+i)+j);               //operaciones para rellenar la matriz B//
+		}
+	}
+	for( int i = 0; i < m; i++ ){
+		for( int j = 0; j < n; j++ ){
+			C[i][j] = A[i][j] - B[i][j];   //operaciones de la resta//
+		}
+	}
+	cout << "\n\t Matriz A : ";          //Imprimimos resultados llamando a la funcion de Imprimir matriz y enviadole los datos//
+    imprimirmatriz( A, m, n );
+    cout << "\n\t Matriz B : ";
+    imprimirmatriz( B, m, n );
+    cout << "\n\t Suma de las matrices (A-B) : ";
+    imprimirmatriz( C, m, n );
+}
+void multiplicacionMatrices(int **A,int m, int n){ //en la funcion recibimos la matriz ** y la variables enteras que usaremos//
+	
+	int  r, s;
+	cout << "\n\t Para la Multiplicacion de matrices";
+    cout << "\n\t el numero de Columnas de A debe ser igual al numero de filas de B";
+	r=n;
+	s=m;
+	B= new int*[r];
+	for(int i=0;i<m;i++){              //en este caso que necesitamos mas de una matriz , declaramos las que necesitemos con punteros
+		B[i]= new int[s];
+	}
+	C= new int*[m];
+	for(int i=0;i<m;i++){
+		C[i]= new int[n];
+	}
+	cout<<"\n\t Rellenar elementos de la matriz B \n";
+	for(int i=0;i<r;i++){
+		for(int j=0;j<s;j++){
+			cout<<"\t Digite elemento ["<<i<<"]["<<j<<"] :";
+			cin>>*(*(B+i)+j);           //operaciones para rellenar la matriz B//
+		}
+	}
+	for( int i = 0; i < m; ++i ){
+        for( int j = 0; j < s; ++j ){
+            C[i][j] = 0;
+            for( int z = 0; z < n; ++z )
+                C[i][j] += A[i][z] * B[z][j];    //operaciones de la multiplicaion//
+        }
+    }
+    cout << "\n\t Matriz A:\n";
+    imprimirmatriz( A, m, n );
+    cout << "\n\t Matriz B:\n";        //Imprimimos resultados llamando a la funcion de Imprimir matriz y enviadole los datos//
+    imprimirmatriz( B, r, s );
+    cout << "\n\t Multiplicacion de las matrices (A*B):\n";
+    imprimirmatriz( C, m, s );
+ 	
+}
+void matrizTraspuesta(int **A,int m, int n){ //en la funcion recibimos la matriz ** y la variables enteras que usaremos//
+
+	B= new int*[m];                  //declaramos matriz auxiliar B 
+	for(int i=0;i<m;i++){
+		B[i]= new int[n];
+	}
+	for( int i=0 ; i< m; i++){
+		for( int j=0 ; j< n; j++){
+			B[i][j]= A[j][i];         //operacion para la matriz traspuesta
+		}
+	}  
+    cout<<"\n\t Matriz original A:\n"; 
+    imprimirmatriz( A, m, n );
+    cout<<"\n\t Matriz Traspuesta de A:\n";   //llamamos, enviamos datos e imprimimos
+    imprimirmatriz( B, m, n );	
+}
+void rangodelaMatriz(int **A,int m, int n){ //en la funcion recibimos la matriz ** y la variables enteras que usaremos//
+
+	float aux, pivote, pivote1, det=1;
+
+    B= new int*[m];
+	for(int i=0;i<m;i++){        //declaramos matriz auxiliar B 
+		B[i]= new int[n];     
+	}
+    for( int i=0 ; i< m; i++){
+		for( int j=0 ; j< n; j++){
+			B[i][j]= A[i][j];
+		}
+	} 
+        
+    for(int i=0;i<m;i++){
+    	pivote=B[i][i];
+    	for(int j=i+1 ; j<n; j++ ){         //operaciones para simplificar la matriz
+    		pivote1=B[j][i];
+    		aux=pivote1/pivote;
+    		for(int k=0; k<n ; k++){
+    			B[j][k]=B[j][k]-aux*B[i][k];	
+			}
+		}
+	}
+	//para el determinante//
+	for(int i=0;i<m;i++){      //tambien podemos sacar el determinante
+		det*=B[i][i];	
+	}
+	
+	cout << "\n\t Matriz A simplificada es :\n";  //imprimimos la matriz simplificada y determinamos el resultado
+    imprimirmatriz( B, m, n );
+    cout << "\n\t El Rango es igual a :"<<m-1<<endl;	
+
+}
+void determinante(int **A,int m, int n) //en la funcion recibimos la matriz ** y la variables enteras que usaremos//
+{
+	float aux, pivote, pivote1, det=1;
+
+    B= new int*[m];      
+	for(int i=0;i<m;i++){        //declaramos matriz auxiliar B 
+		B[i]= new int[n];
+	}
+    for( int i=0 ; i< m; i++){
+		for( int j=0 ; j< n; j++){
+			B[i][j]= A[i][j];
+		}
+	} 
+        
+    for(int i=0;i<m;i++){
+    	pivote=B[i][i];
+    	for(int j=i+1 ; j<n; j++ ){             //operaciones para simplificar la matriz//
+    		pivote1=B[j][i];
+    		aux=pivote1/pivote;
+    		for(int k=0; k<n ; k++){
+    			B[j][k]=B[j][k]-aux*B[i][k];	
+			}
+		}
+	}
+	//para el determinante//
+	for(int i=0;i<m;i++){          //tenemos el valor de la determinante//
+		det*=B[i][i];	
+	}
+	
+	cout << "\n\t Matriz A simplificada es :\n";           //imprimimos matriz y mostramos resultado//
+    imprimirmatriz( B, m, n );
+    cout << "\n\t LA DETERMINANTE ES IGUAL A :"<<det<<endl;		
+}
